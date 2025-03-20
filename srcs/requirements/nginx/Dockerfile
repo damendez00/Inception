@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM debian:12.0
 
 # fetch latest versions of packages and install nginx and openssl
 # ngnix is 
