@@ -1,8 +1,5 @@
 FROM debian:12.0
 
-# fetch latest versions of packages and install nginx and openssl
-# ngnix is 
-# openssl is ...
 RUN apt-get update && apt-get install -y \
     nginx \
     openssl \
