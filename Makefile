@@ -1,4 +1,7 @@
 COMPOSE_FILE = srcs/docker-compose.yml
+ENV_FILE = srcs/.env
+include $(ENV_FILE)
+export $(shell sed 's/=.*//' $(ENV_FILE))
 
 all: up
 
@@ -6,7 +9,6 @@ up:
 	@echo "🚀 Upping services with Docker Compose!"
 	docker compose -f $(COMPOSE_FILE) up -d --build
 
-# stops and removes containers
 down:
 	@echo "🛑 Stopping services ..."
 	docker compose -f $(COMPOSE_FILE) down
@@ -18,6 +20,12 @@ clean: down
 
 re: clean all
 
+# Restart services without losing data
+restart:
+	@echo "🔄 Restarting services..."
+	docker compose -f $(COMPOSE_FILE) down
+	docker compose -f $(COMPOSE_FILE) up -d --build
+
 nginx:
 	docker compose -f $(COMPOSE_FILE) up -d --build nginx
 
@@ -27,6 +35,7 @@ mariadb:
 wordpress:
 	docker compose -f $(COMPOSE_FILE) up -d --build wordpress
 
+# Logs
 logs:
 	docker compose -f $(COMPOSE_FILE) logs -f
 
@@ -49,17 +58,11 @@ nginx-bash:
 wordpress-bash:
 	docker compose -f $(COMPOSE_FILE) exec wordpress bash
 
-#show tables in mariadb
+# Show tables in mariadb
 mariadb-show-tables:
 	docker compose -f $(COMPOSE_FILE) exec mariadb mysql -u $(MYSQL_USER) -p$(MYSQL_PASSWORD) $(MYSQL_DATABASE) -e "SHOW TABLES;"
 
 mariadb-show-databases:
 	docker compose -f $(COMPOSE_FILE) exec mariadb mysql -u $(MYSQL_USER) -p$(MYSQL_PASSWORD) -e "SHOW DATABASES;"
-
-# Restart services without losing data
-restart:
-	@echo "🔄 Restarting services..."
-	docker compose -f $(COMPOSE_FILE) down
-	docker compose -f $(COMPOSE_FILE) up -d --build
 
 .PHONY: all up down clean re logs mariadb-bash nginx-bash wordpress-bash

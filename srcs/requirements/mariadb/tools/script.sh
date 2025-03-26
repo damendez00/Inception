@@ -54,6 +54,7 @@ root_pwd=${MYSQL_ROOT_PASSWORD}
 echo "🔧 Configuring database..."
 
 # First configure the root password
+echo "🔒 Securing root access..."
 mysqladmin -u root password "$root_pwd"
 
 # Then create the database and user
@@ -61,6 +62,7 @@ mysql -u root -p"$root_pwd" << EOF
 CREATE DATABASE IF NOT EXISTS $db_name;
 CREATE USER IF NOT EXISTS '$db_user'@'%' IDENTIFIED BY '$db_pwd';
 GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'%';
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$root_pwd';
 FLUSH PRIVILEGES;
 EOF
 
