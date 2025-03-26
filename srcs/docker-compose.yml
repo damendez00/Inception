@@ -7,7 +7,7 @@ services:
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME}    
     volumes:
-      - wordpress_data:/var/www/html # serves files/wordpress site from this dir
+      - wordpress_data:/var/www/html
     depends_on:
       - wordpress
     networks:
@@ -30,7 +30,7 @@ services:
       WP_USER_EMAIL: ${WP_USER_EMAIL}
       WP_USER_PASSWORD: ${WP_USER_PASSWORD}
     volumes:
-      -wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html
     depends_on:
       - mariadb
     networks:
@@ -46,9 +46,9 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      -mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     networks:
-      -inception_network
+      - inception_network
     restart: always
 
 volumes:
@@ -57,14 +57,14 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /home/damendez/data/wordpress
+      device: /c/Users/David/Desktop/wordpress
 
   mariadb_data:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /home/damendez/data/mariadb
+      device: /c/Users/David/Desktop/mariadb
 
 networks:
   inception_network:

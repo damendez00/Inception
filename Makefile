@@ -3,20 +3,63 @@ COMPOSE_FILE = srcs/docker-compose.yml
 all: up
 
 up:
-	@echo "Upping services with Docker Compose!"
-	docker compose $(COMPOSE_FILE) up --file --detach --build
+	@echo "🚀 Upping services with Docker Compose!"
+	docker compose -f $(COMPOSE_FILE) up -d --build
 
 # stops and removes containers
 down:
-	@echo "Stopping services ..."
-	docker compose $(COMPOSE_FILE) down
+	@echo "🛑 Stopping services ..."
+	docker compose -f $(COMPOSE_FILE) down
 
-#does down and also stops and removes network
 clean: down
-	@echo "Stopping services ..."
-	docker compose $(COMPOSE_FILE) down
-	docker system prune --all
+	@echo "🧹 Cleaning volumes and networks..."
+	docker compose -f $(COMPOSE_FILE) down -v
+	docker system prune -af
 
 re: clean all
 
-.PHONY: all up down clean re
+nginx:
+	docker compose -f $(COMPOSE_FILE) up -d --build nginx
+
+mariadb:
+	docker compose -f $(COMPOSE_FILE) up -d --build mariadb
+
+wordpress:
+	docker compose -f $(COMPOSE_FILE) up -d --build wordpress
+
+logs:
+	docker compose -f $(COMPOSE_FILE) logs -f
+
+nginx-logs:
+	docker compose -f $(COMPOSE_FILE) logs -f nginx
+
+mariadb-logs:
+	docker compose -f $(COMPOSE_FILE) logs -f mariadb
+
+wordpress-logs:
+	docker compose -f $(COMPOSE_FILE) logs -f wordpress
+
+# Access to containers
+mariadb-bash:
+	docker compose -f $(COMPOSE_FILE) exec mariadb bash
+
+nginx-bash:
+	docker compose -f $(COMPOSE_FILE) exec nginx sh
+
+wordpress-bash:
+	docker compose -f $(COMPOSE_FILE) exec wordpress bash
+
+#show tables in mariadb
+mariadb-show-tables:
+	docker compose -f $(COMPOSE_FILE) exec mariadb mysql -u $(MYSQL_USER) -p$(MYSQL_PASSWORD) $(MYSQL_DATABASE) -e "SHOW TABLES;"
+
+mariadb-show-databases:
+	docker compose -f $(COMPOSE_FILE) exec mariadb mysql -u $(MYSQL_USER) -p$(MYSQL_PASSWORD) -e "SHOW DATABASES;"
+
+# Restart services without losing data
+restart:
+	@echo "🔄 Restarting services..."
+	docker compose -f $(COMPOSE_FILE) down
+	docker compose -f $(COMPOSE_FILE) up -d --build
+
+.PHONY: all up down clean re logs mariadb-bash nginx-bash wordpress-bash
