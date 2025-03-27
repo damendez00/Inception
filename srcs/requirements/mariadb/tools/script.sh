@@ -32,7 +32,7 @@ skip-networking=0
 skip-bind-address
 EOF
 
-# Start MySQL service in background
+# Start MySQL service in background, If MySQL were started in the foreground initially, the script would not be able to execute the subsequent setup commands
 echo "📦 Starting MySQL..."
 mysqld --user=mysql --datadir=/var/lib/mysql &
 
