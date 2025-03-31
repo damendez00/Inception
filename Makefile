@@ -17,6 +17,7 @@ clean: down
 	@echo "🧹 Cleaning volumes and networks..."
 	docker compose -f $(COMPOSE_FILE) down -v
 	docker system prune -af
+	rm -rf /c/Users/David/Desktop/data/*
 
 re: clean all
 

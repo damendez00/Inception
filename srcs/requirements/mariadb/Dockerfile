@@ -18,7 +18,7 @@ RUN mkdir -p /var/run/mysqld && \
 COPY tools/script.sh /script.sh
 COPY tools/init.sql /init.sql
 
-# Initialize the database
+# Ieitialize the database
 RUN chmod +x /script.sh && \
     mysql_install_db --user=mysql --datadir=/var/lib/mysql && \
     chown -R mysql:mysql /var/lib/mysql

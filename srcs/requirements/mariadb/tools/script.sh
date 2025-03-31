@@ -55,7 +55,7 @@ echo "🔧 Configuring database..."
 
 # First configure the root password
 echo "🔒 Securing root access..."
-mysqladmin -u root password "$root_pwd"
+#mysqladmin -u root password "$root_pwd"
 
 # Then create the database and user
 mysql -u root -p"$root_pwd" << EOF
